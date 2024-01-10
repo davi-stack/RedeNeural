@@ -56,7 +56,25 @@ int main() {
     std::vector<Matrix> gameStates; // Representa os estados do jogo
     std::vector<Matrix> nextMoves; // Representa as jogadas ideais
     // Preencha os gameStates e nextMoves com os dados de treinamento
-
+    double entrada[7][9] ={
+        {-1,-1,0,1,1,0,-1,1,1},
+        {1,0,0,-1,-1,1,1,0,0},
+        {0,-1,1,1,1,0,-1,0,0},
+        {1,-1,0,-1,-1,1,1,1,0},
+        {0,-1,1,0,0,1,0,0,0},
+        {0,0,0,0,1,-1,0,0,1},
+        {0,0,-1,0,1,0,-1,1,1}
+        
+    };
+    double saida[7][9] ={
+        {0,0,1,0,0,0.1,0,0,0},
+        {0,1,0.1,0,0,0,01,0.1},
+        {0.1,0,0,0,0,1,0,0.1,0.1},
+        {0,0,0.1,0,0,0,0,0,1},
+        {0.1,0,0,0.1,0.1,0,0.1,0.1,1},
+        {1, 0.1, 0.1, 0.1, 0, 0, 0.1, 0.1, 0},
+        {0.1,1,0,0.1, 0, 0.1, 0, 0, 0}
+    };
     // Treinar a rede neural
     for (int i = 0; i < gameStates.size(); ++i) {
         rn.train(gameStates[i], nextMoves[i]);
@@ -78,8 +96,6 @@ int main() {
         // Atualizar currentState com a jogada da rede
 
         // Imprimir o novo estado do tabuleiro
-        printBoard(currentState);
-    }
 
     return 0;
 }
