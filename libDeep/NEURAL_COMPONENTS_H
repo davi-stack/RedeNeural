@@ -5,49 +5,35 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-
-
 class Matrix {
 private:
      static bool randomGeneratorInitialized;
 public:
-static Matrix vectorTomatriz(int * arr, int n){
+Matrix(){
+    
+}
+void printJogoDaVelha(){
+    for(int i=0;i<rows;i++){
+        for(int j=0;j<cols;j++){
+            if(data[i][j]==-1) cout << "O";
+            if(data[i][j]==1) cout << "X";
+            if(data[i][j]==0) cout << "-";
+            cout << " ";
+        }
+        cout << endl;
+    }
+}
+
+static Matrix vectorTomatriz(double * arr, int n) {
     Matrix re(n, n);
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            re.data[i][j]= arr[i+j];
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            re.data[i][j] = arr[i * n + j]; // Mapeia o vetor linear para a matriz
         }
     }
     return re;
 }
 
-int haveIqualLine() {
-    for (int i = 0; i < 3; i++) {
-        if (data[i][0] == data[i][1] && data[i][1] == data[i][2] && data[i][0] != 0) {
-            return i;
-        }
-    }
-    return -1;
-}
-int haveIqualCols() {
-    for (int j = 0; j < 3; j++) {
-        if (data[0][j] == data[1][j] && data[1][j] == data[2][j] && data[0][j] != 0) {
-            return j;
-        }
-    }
-    return -1;
-}
-int haveIgualDiag() {
-    // Verificando a diagonal principal
-    if (data[0][0] == data[1][1] && data[1][1] == data[2][2] && data[0][0] != 0) {
-        return 0; // Principal diagonal
-    }
-    // Verificando a diagonal secundária
-    if (data[0][2] == data[1][1] && data[1][1] == data[2][0] && data[0][2] != 0) {
-        return 1; // Secundária diagonal
-    }
-    return -1;
-}
 
 std::vector<std::vector<double>> data;
     int rows;
@@ -194,9 +180,10 @@ std::vector<std::vector<double>> data;
     
     // Add two matrices
     Matrix add(Matrix other) const {
-        if (rows != other.rows || cols != other.cols) {
-            throw std::invalid_argument("Matrices dimensions must match for addition.");
-        }
+        cout << rows <<endl << other.rows<< endl;
+        // if (rows != other.rows || cols != other.cols) {
+        //     throw std::invalid_argument("Matrices dimensions must match for addition.");
+        // }
 
         Matrix result(rows, cols);
         for (int i = 0; i < rows; i++) {
@@ -209,6 +196,7 @@ std::vector<std::vector<double>> data;
 
     // Multiply two matrices (static method)
     static Matrix multiply(const Matrix& a, const Matrix& b) {
+        
         if (a.cols != b.rows) {
             throw std::invalid_argument("Matrices with incompatible dimensions for multiplication.");
         }
@@ -257,13 +245,13 @@ class RedeNeural{
     Matrix peso_in_oc;
     Matrix peso_oc_out;
     
-    RedeNeural(double i, double oc, double ou) : input(i), output(ou), oculta(oc), in_oc(i, 1), oc_out(oc, 1),
+    RedeNeural(double i, double oc, double ou, double lernin) : input(i), output(ou), oculta(oc), in_oc(i, 1), oc_out(oc, 1),
     peso_in_oc(oc, i), peso_oc_out(ou, oc), bias_in_oc(oc, 1), bias_oc_out(ou, 1) {
     bias_oc_out.randomize();
     bias_in_oc.randomize();
     peso_oc_out.randomize();
     peso_in_oc.randomize();
-    this->learningRate = 0.1;
+    this->learningRate = lernin;
         
     }
 
@@ -275,7 +263,7 @@ class RedeNeural{
     // hidden.applyFunction([](int x) -> double { return sigmoide(x); });
     // cout << hidden.toString() << endl;
     // }
-    void feedforward(Matrix input) {
+    Matrix feedforward(Matrix input) {
         //INPUT -> HIDDEN
         Matrix hidden = Matrix::multiply(peso_in_oc, input);
         hidden.add(bias_in_oc);
@@ -291,7 +279,7 @@ class RedeNeural{
         Matrix output = Matrix::multiply(peso_oc_out, hidden);
         output = output.add(bias_oc_out);
         output.applyFunction(sigmoide);
-        cout << output.toString() << endl;
+        return output;
         
     }
     
@@ -347,9 +335,6 @@ class RedeNeural{
         Matrix pesos_in_oc_deltas = Matrix::multiply(gradient_oc, input_T);
         peso_in_oc.add(pesos_in_oc_deltas);
     }
-
-    
-    
     Matrix predict(Matrix input){
     Matrix hidden = Matrix::multiply(peso_in_oc, input);
     hidden.add(bias_in_oc);
@@ -361,8 +346,7 @@ class RedeNeural{
     return output;
     }
 };
-
+ 
 bool Matrix::randomGeneratorInitialized = false;
-
 
 #endif // NEURAL_COMPONENTS_H

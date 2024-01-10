@@ -49,14 +49,18 @@ int checkGameState(Matrix &m) {
 }
 
 int main() {
-    // Inicializando a rede neural para o jogo da velha
-    RedeNeural rn(9, 27, 9); // Ajuste os parâmetros conforme necessário
-
-    // Dados de treinamento (simplificados para demonstração)
-    std::vector<Matrix> gameStates; // Representa os estados do jogo
-    std::vector<Matrix> nextMoves; // Representa as jogadas ideais
-    // Preencha os gameStates e nextMoves com os dados de treinamento
+    int input = 9;//matrix 3x3
+    int oculta = 6;//teste a princípio
+    int output =9; //matrix 3x3
+    RedeNeural rn(3, 9, 3, 0.4);
     double entrada[7][9] ={
+        /**
+         * casos simples, que a decisão de jogada é obvia
+         * -1 -> O = bolinha = maquina
+         * 1 -> X = outro jogados
+         * 0 -> lugar ainda não marcado
+         * 
+         * */
         {-1,-1,0,1,1,0,-1,1,1},
         {1,0,0,-1,-1,1,1,0,0},
         {0,-1,1,1,1,0,-1,0,0},
@@ -67,35 +71,50 @@ int main() {
         
     };
     double saida[7][9] ={
-        {0,0,1,0,0,0.1,0,0,0},
-        {0,1,0.1,0,0,0,01,0.1},
-        {0.1,0,0,0,0,1,0,0.1,0.1},
-        {0,0,0.1,0,0,0,0,0,1},
-        {0.1,0,0,0.1,0.1,0,0.1,0.1,1},
-        {1, 0.1, 0.1, 0.1, 0, 0, 0.1, 0.1, 0},
-        {0.1,1,0,0.1, 0, 0.1, 0, 0, 0}
+        /**
+         * saída esperada para entrada i, respectiva
+         * 0.1 -> é possível jogar, mas não é uma boa jogada
+         * -1 -> não é possível jogar, está preenchido
+         * 1 -> boa jogada, é onde ela deve aprender a jogar
+         * 
+         * */
+         
+        {-10,-10,1,-10,-10,0.1,-10,-10,-10},
+        {-10,1,0.1,-10,-10,-10,01,0.1},
+        {0.1,-10,-10,-10,-10,1,-10,0.1,0.1},
+        {-10,-10,0.1,-10,-10,-10,-10,-10,1},
+        {0.1,-10,-10,0.1,0.1,-10,0.1,0.1,1},
+        {1, 0.1, 0.1, 0.1, -10, -10, 0.1, 0.1, -10},
+        {0.1,1,-10,0.1, -10, 0.1, -10, -10, -10}
     };
-    // Treinar a rede neural
-    for (int i = 0; i < gameStates.size(); ++i) {
-        rn.train(gameStates[i], nextMoves[i]);
+    vector<Matrix> entradas(7);
+    vector<Matrix> saidas(7);
+    for(int i=0;i<7;i++){
+        entradas[i] = Matrix::vectorTomatriz(entrada[i],3);
+        saidas[i] = Matrix::vectorTomatriz(saida[i],3);
+        rn.train(entradas[i], saidas[i]);
     }
-
-    // Loop de jogo
-    Matrix currentState(3, 3); // Estado inicial do tabuleiro
-    while (true) {
-        // Imprimir o estado atual do tabuleiro
-        printBoard(currentState);
-
-        // Verificar se o jogo acabou
-
-        // Jogada do humano
-        // Obter as coordenadas da jogada do humano e atualizar currentState
-
-        // Jogada da rede neural
-        Matrix prediction = rn.predict(currentState);
-        // Atualizar currentState com a jogada da rede
-
-        // Imprimir o novo estado do tabuleiro
-
-    return 0;
+    double input_test [9]=
+    {-1,-1,0,1,1,0,-1,1,1};
+    Matrix input_t = Matrix::vectorTomatriz(input_test, 3);
+    input_t.printJogoDaVelha();
+    Matrix outputTest = rn.feedforward(input_t);
+    cout << endl << endl;
+    outputTest.display();
+    
+    
+    
+    double input_test2 [9]=
+     {1,0,0,-1,-1,1,1,0,0};
+    input_t = Matrix::vectorTomatriz(input_test2, 3);
+    input_t.printJogoDaVelha();
+    outputTest = rn.feedforward(input_t);
+    cout << endl << endl;
+    outputTest.display();
+    
+    
+    
 }
+
+
+
