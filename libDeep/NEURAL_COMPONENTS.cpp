@@ -1,9 +1,5 @@
-// NeuralComponents.h
-#ifndef NEURAL_COMPONENTS_H
-#define NEURAL_COMPONENTS_H
-
 #include <bits/stdc++.h>
-
+#include "NEURAL_COMPONENTS.h"
 using namespace std;
 class Matrix {
 private:
@@ -241,7 +237,6 @@ class RedeNeural{
     //bias to acelerate the process
     Matrix bias_in_oc;
     Matrix bias_oc_out;
-    
     Matrix peso_in_oc;
     Matrix peso_oc_out;
     
@@ -348,5 +343,3 @@ class RedeNeural{
 };
  
 bool Matrix::randomGeneratorInitialized = false;
-
-#endif // NEURAL_COMPONENTS_H
