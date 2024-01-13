@@ -1,0 +1,2 @@
+Como executar o programa usando a biblioteca
+g++ main.cpp -o main -L./libDeep -lib-DeepLern
