@@ -1,0 +1,106 @@
+ ----A rede tem sempre uma camada oculta, porém ela pode ter tamanhos diferentes
+ Os primeiros testes estão sendo feitos com um for para treinar usando o metodo train, 18 casos de exemplo de entrada e saída esperada
+ 1 -> x, 2-> O, 0 -> lugar ainda não jogado. Daí a idéia a princípio é uma saída de matrix 3x3 de probabilidade, usei -80 para lugares preenchidos, que não se pode jogar,
+10 para a jogada ideal e 1 para lugares possíveis de jogar, mas que não seriam interessantes, jogadas ruins.
+Não usei nenhuma teoria para esse números, são números aleatório, apenas para representar uma ideia e se achar que pode afetar o aprendizado posso altera-los
+ Criei dois arrays de treinamento, de 18 casos, a princípio, como:
+        /**
+         * casos simhttps://www.onlinegdb.com/edit/WMKrNX29Y#tab-stdinples, que a decisão de jogada é obvia
+         * 2 -> O = bolinha = maquina
+         * 1 -> X = outro jogados
+         * 0 -> lugar ainda não marcado
+         * 
+         * */
+        
+        {1, 2, 0,
+        0, 1, 0,
+        0, 0,0},
+        /*
+        x O -       0  0 1
+        - x -  ->   1  0 1
+        - - -      1  1 10
+        */
+        {0,0,0, 
+        2, 1, 0,
+        1, 0, 0},
+        /*
+        - - -       1  1 10
+        o x -  ->   0  0 1
+        x - -      0  1 1
+        */
+que teria os casos de sáida:
+/**
+         * saída esperada para entrada i, respectiva
+         * 1 -> é possível jogar, mas não é uma boa jogada
+         * 0 -> não é possível jogar, está preenchido
+         * 10 -> boa jogada, é onde ela deve aprender a jogar
+         * 6 -> jogada boa, porém existe mais de uma
+         * */
+        {-80, -80, 1,
+        1, -80, 1,
+        1, 1, 10},//1º
+        /*
+        x O -       0  0 1
+        - x -  ->   1  0 1
+        - - -      1  1 10
+        */
+        
+        {1, 1, 10,
+        -80, -80, 1,
+        -80,  1, 1},//2º
+        /*
+        - - -       1  1 10
+        o x -  ->   0  0 1
+        x - -      0  1 1
+        */
+Na main, criei a rede com os parâmetros:
+3 -> Não vai mudar: entrada é 3x3 com os valores dos lugares do jogos
+9 -> Teste de tamanho de oculta
+3 -> provavelmente não vou mudar, mas se pensar em alguma forma melhor de representar a saída, como uma jogada posso mudar
+0.2 -> lerning rate, taxa de absorção dos erros. Vou testar vários valores:
+Para esse caso a saída foi: 
+"
+Depois do Teste:
+-----------------------------------------------
+- - X 
+- O X 
+- - - 
+
+
+1.41675e-08 7.96154e-08 7.96154e-08 
+1.69326e-16 8.43582e-17 8.43582e-17 
+0.976741 0.949751 0.949751 
+
+jogaria em: [2, 2].
+- - X 
+- O X 
+- X O 
+
+
+1.41675e-08 7.96154e-08 7.96154e-08 
+1.69326e-16 8.43582e-17 1 
+0.976741 0.949751 1 
+
+jogaria em: [2, 2].
+O X X 
+- O X 
+- - - 
+
+
+1.41675e-08 7.96154e-08 7.96154e-08 
+1.69326e-16 8.43582e-17 1 
+0.976741 0.949751 1 
+
+jogaria em: [2, 2].
+O - X 
+O X X 
+- - - 
+
+
+1.41675e-08 7.96154e-08 7.96154e-08 
+1.69326e-16 8.43582e-17 1 
+0.976741 0.949751 1 
+
+jogaria em: [2, 2]."
+Ele acerta o primeiro caso, o que me deixou animado, mas foi sorte. Pois ele logo em seguida marcaria um lugar ocupado no segundo teste, também comvalores muito altos para
+o [2, 1], que também é uma jogada impossível. No terceiro caso ele acerta e seus valores mais altos são jogadas possíveis
