@@ -1,5 +1,13 @@
+#include <sstream>
 #include "Matrix.hpp"
-#include <bits/stdc++.h>
+#include <vector>
+#include <functional>
+#include <string>
+#include <stdexcept>
+#include <ctime>
+#include <cstdlib>
+#include <cmath>
+#include <iostream>
 using namespace std;
 bool Matrix::randomGeneratorInitialized = false;
 

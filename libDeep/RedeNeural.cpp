@@ -1,6 +1,13 @@
 #include "Matrix.hpp"
-#include "RedeNeural.h"
-
+#include "RedeNeural.hpp"
+#include <vector>
+#include <functional>
+#include <string>
+#include <stdexcept>
+#include <ctime>
+#include <cstdlib>
+#include <cmath>
+#include <iostream>
 RedeNeural::RedeNeural(double i, double oc, double ou, double lernin) : input(i), output(ou), oculta(oc), in_oc(i, 1), oc_out(oc, 1),
     peso_in_oc(oc, i), peso_oc_out(ou, oc), bias_in_oc(oc, 1), bias_oc_out(ou, 1) {
     bias_oc_out.randomize();
