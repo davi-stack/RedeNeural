@@ -10,6 +10,48 @@
 #include <iostream>
 using namespace std;
 bool Matrix::randomGeneratorInitialized = false;
+Matrix::Matrix(){
+
+}
+Matrix::Matrix(int i, int j) : rows(i), cols(j) {
+        data.resize(i, std::vector<double>(j, 0.0));
+        initializeRandomGenerator();
+    }
+void Matrix::maxNumI(){
+    long double maior =data[0][0];
+    int maiorI = 0;
+    int maiorJ = 0;
+    for(int i=0;i<rows;i++){
+        for(int j=0;j<cols;j++){
+            if(data[i][j]>maior){
+                maiorI= i;
+                maiorJ = j;
+            }
+        }
+    }
+    cout << "jogaria em: [" << maiorI << ", " << maiorJ << "]." << endl;
+    
+}
+   void Matrix::printJogoDaVelha(){
+    for(int i=0;i<rows;i++){
+        for(int j=0;j<cols;j++){
+            if(data[i][j]==2) cout << "O";
+            if(data[i][j]==1) cout << "X";
+            if(data[i][j]==0) cout << "-";
+            cout << " ";
+        }
+        cout << endl;
+    }
+}
+Matrix Matrix::vectorTomatriz(double * arr, int n) {
+    Matrix re(n, n);
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            re.data[i][j] = arr[i * n + j]; // Mapeia o vetor linear para a matriz
+        }
+    }
+    return re;
+}
 
 double sigmoide(double a) {
     return 1.0 / (1.0 + std::exp(-a));
@@ -17,11 +59,7 @@ double sigmoide(double a) {
 double dSigmoide(double a){
     return a *(1 - a);
 }
-Matrix::Matrix(int i, int j) : rows(i), cols(j) {
-        data.resize(i, std::vector<double>(j, 0.0));
-        initializeRandomGenerator();
-    }
-// Apply a function to each element in the matrix
+    // Apply a function to each element in the matrix
     Matrix Matrix::applyFunction(Matrix& mat, std::function<double(double)> func) {
         Matrix result(mat.rows, mat.cols);
         for (int i = 0; i < mat.rows; ++i) {
@@ -31,9 +69,7 @@ Matrix::Matrix(int i, int j) : rows(i), cols(j) {
         }
         return result;
     }
-
-
-// Apply a function to each element in the matrix
+    // Apply a function to each element in the matrix
     void Matrix::applyFunction(std::function<double(double)> func) {
         for (int i = 0; i < rows; ++i) {
             for (int j = 0; j < cols; ++j) {
@@ -41,8 +77,7 @@ Matrix::Matrix(int i, int j) : rows(i), cols(j) {
             }
         }
     }
-
-// Função para multiplicar uma matriz por um escalar e retornar uma nova matriz
+    // Função para multiplicar uma matriz por um escalar e retornar uma nova matriz
    Matrix Matrix::scalarMultiply(const Matrix& mat, double scalar) {
         Matrix result = mat;  // Cria uma cópia de mat
 
@@ -83,6 +118,7 @@ Matrix::Matrix(int i, int j) : rows(i), cols(j) {
         data[i][j] = val;
     }
     // Static function to create a matrix from a vector
+    
     Matrix Matrix::matrixFromVector(vector<double> aux) {
         Matrix result(static_cast<int>(aux.size()), 1);
         for(int i = 0; i < aux.size(); i++) {
@@ -90,13 +126,13 @@ Matrix::Matrix(int i, int j) : rows(i), cols(j) {
         }
         return result;
     }
- 
      void Matrix::initializeRandomGenerator() {
         if (!randomGeneratorInitialized) {
             std::srand(static_cast<unsigned>(std::time(nullptr)));
             randomGeneratorInitialized = true;
         }
     }
+    
     
     void Matrix::randomize() {
         for (int i = 0; i < rows; ++i) {
@@ -105,9 +141,8 @@ Matrix::Matrix(int i, int j) : rows(i), cols(j) {
             }
         }
     }
-    
     //product hadamard
-     Matrix Matrix::hadamard(Matrix a, Matrix b) {
+    Matrix Matrix::hadamard(Matrix a, Matrix b) {
         if (a.rows != b.rows || a.cols != b.cols) {
             throw std::invalid_argument("Matrices dimensions must match for addition.");
         }
@@ -121,7 +156,8 @@ Matrix::Matrix(int i, int j) : rows(i), cols(j) {
         return result;
     }
     
-     Matrix Matrix::add(const Matrix& a, const Matrix& b) {
+    
+    Matrix Matrix::add(const Matrix& a, const Matrix& b) {
         if (a.rows != b.rows || a.cols != b.cols) {
             throw std::invalid_argument("Matrices must be of the same dimensions to add.");
         }

@@ -1,2 +1,3 @@
-Como executar o programa usando a biblioteca
-g++ main.cpp -o main -L./libDeep -lib-DeepLern
+#Compilar no terminal para teste:
+g++ main.cpp libDeep/Matrix.cpp libDeep/RedeNeural.cpp -o main
+
