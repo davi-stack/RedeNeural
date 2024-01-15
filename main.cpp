@@ -3,12 +3,44 @@
 #include "RedeNeural.h"
 using namespace std;
 
+void printSideBySide(Matrix other, Matrix one) {
+        for (int i = 0; i < 3; ++i) {
+           for(int j=0;j<3;j++){
+            cout << one.getElement(i, j) << " ";
+           }
+           cout << "     ----->    ";
+           for(int j=0;j<3;j++){
+            cout << other.getElement(i, j) << " ";
+           }
+           cout << endl;
+
+    }
+    }
+    void segundaJogada(Matrix c){
+        int li, co;
+        double maior = c.getElement(0, 0);
+        double secMax = c.getElement(0, 1);
+        maior = max(maior, secMax);
+        secMax = min(maior, secMax);
+        for(int i=0;i<3;i++){
+            for(int j=0;j<3;j++){
+                if(c.getElement(i, j)>=maior) maior = c.getElement(i, j);
+                else{
+                    if(c.getElement(i, j)>=secMax) {
+                        secMax = c.getElement(i, j);
+                    li = i; co = j;
+                    }
+                }
+            }
+        }
+        cout << "segunda jogada seria: [" << li << ", " << co << "]" << endl;
+    }
 
 int main() {
     int input = 3;//matrix 3x3
     int oculta = 9;//teste a princípio
     int output =3; //matrix 3x3
-    double lernin = 0.2;
+    double lernin = 0.10;
     Matrix aux;
     Matrix outputTest;
     RedeNeural rn(input,oculta, output, lernin);
@@ -26,7 +58,7 @@ int main() {
     // cout << endl << endl;
     // outputTest.display();
     // }
-    
+    int casos = 18;
      
     
     double entrada[18][9] ={
@@ -384,13 +416,20 @@ int main() {
     
     
     
-    vector<Matrix> entradas(18);
-    vector<Matrix> saidas(18);
+    // Matrix input_test;
+    // Matrix expected;
+    cout << "Caso de teste com os valores: learningRate = " << lernin << ", oculta com " << oculta << " unidades." << endl;
+cout << "Treino com os seguintes " << casos << " casos:" << endl;
     for(int i=0;i<18;i++){
+        Matrix expected = Matrix::vectorTomatriz(saida[i],3);
+        Matrix input_test = Matrix::vectorTomatriz(entrada[i],3);
+        cout << "treino de numero" << i+1 << endl;
+        cout << "--------" << endl;
+        //Matrix::p
+        printSideBySide(expected, input_test);
+        cout << "-------" << endl;
         
-        entradas[i] = Matrix::vectorTomatriz(entrada[i],3);
-        saidas[i] = Matrix::vectorTomatriz(saida[i],3);
-        rn.train(entradas[i], saidas[i]);
+        rn.train(input_test, expected);
     }
     
     cout << "Depois do Teste:" << endl << "-----------------------------------------------" << endl;
@@ -400,7 +439,8 @@ int main() {
     outputTest = rn.feedforward(aux);
     cout << endl << endl;
      outputTest.maxNumI();
-    
+    segundaJogada(outputTest);
+    cout << endl;
     }
      
     

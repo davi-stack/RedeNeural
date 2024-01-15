@@ -104,3 +104,39 @@ O X X
 jogaria em: [2, 2]."
 Ele acerta o primeiro caso, o que me deixou animado, mas foi sorte. Pois ele logo em seguida marcaria um lugar ocupado no segundo teste, também comvalores muito altos para
 o [2, 1], que também é uma jogada impossível. No terceiro caso ele acerta e seus valores mais altos são jogadas possíveis
+
+
+
+Teste, oculta 9, ainda 18 casos de treino, lerningRate = 0.2(20%)
+
+Depois do Treino, teste
+-----------------------------------------------
+- - X 
+- O X 
+- - - 
+
+
+jogaria em: [2, 2].
+- - X 
+- O X 
+- X O 
+
+
+jogaria em: [2, 2].
+O X X 
+- O X 
+- - - 
+
+
+jogaria em: [2, 2].
+O - X 
+O X X 
+- - - 
+
+
+jogaria em: [2, 2].
+
+
+
+Teste, oculta 9, lerningRate = 0.15:
+

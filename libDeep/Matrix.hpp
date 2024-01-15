@@ -14,17 +14,18 @@ class Matrix {
 private:
     static bool randomGeneratorInitialized;
     std::vector<std::vector<double>> data;
-    int rows;
-    int cols;
+    
 
 public:
+    int rows;
+    int cols;
     Matrix();
     Matrix(int i, int j);
     void maxNumI();
     void printJogoDaVelha();
 
     static Matrix vectorTomatriz(double* arr, int n);
-
+    void printSideBySide(Matrix other);
 
     static Matrix applyFunction(Matrix& mat, std::function<double(double)> func);
     void applyFunction(std::function<double(double)> func);

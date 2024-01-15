@@ -117,6 +117,20 @@ double dSigmoide(double a){
     void Matrix::setElement(int i, int j, double val) {
         data[i][j] = val;
     }
+    void Matrix::printSideBySide(Matrix other) {
+        for (int i = 0; i < max(rows, other.rows); ++i) {
+           for(int j=0;j<cols;j++){
+            cout << getElement(i, j) << " ";
+           }
+           cout << "     ----->    ";
+           for(int j=0;j<other.cols;j++){
+            cout << other.getElement(i, j) << " ";
+           }
+           cout << endl;
+
+    }
+    }
+
     // Static function to create a matrix from a vector
     
     Matrix Matrix::matrixFromVector(vector<double> aux) {
@@ -156,7 +170,7 @@ double dSigmoide(double a){
         return result;
     }
     
-    
+
     Matrix Matrix::add(const Matrix& a, const Matrix& b) {
         if (a.rows != b.rows || a.cols != b.cols) {
             throw std::invalid_argument("Matrices must be of the same dimensions to add.");
