@@ -16,40 +16,142 @@ void printSideBySide(Matrix other, Matrix one) {
 
     }
     }
-    void segundaJogada(Matrix c){
-        int li, co;
-        double maior = c.getElement(0, 0);
-        double secMax = c.getElement(0, 1);
-        maior = max(maior, secMax);
-        secMax = min(maior, secMax);
-        for(int i=0;i<3;i++){
-            for(int j=0;j<3;j++){
-                if(c.getElement(i, j)>=maior) maior = c.getElement(i, j);
-                else{
-                    if(c.getElement(i, j)>=secMax) {
-                        secMax = c.getElement(i, j);
-                    li = i; co = j;
-                    }
+    #include <iostream>
+#include <vector>
+
+bool isWinningMove(Matrix board, int player) {
+    // Verifica linhas, colunas e diagonais para um possível vencedor
+    for (int i = 0; i < 3; i++) {
+        if (board.getElement(i, 0) == player && board.getElement(i, 1) == player && board.getElement(i, 2) == player) return true;
+        if (board.getElement(0, i) == player && board.getElement(1, i) == player && board.getElement(2, i) == player) return true;
+    }
+    if (board.getElement(0, 0) == player && board.getElement(1, 1) == player && board.getElement(2, 2) == player) return true;
+    if (board.getElement(0, 2) == player && board.getElement(1, 1) == player && board.getElement(2, 0) == player) return true;
+
+    return false;
+}
+
+
+void analyzeMove(Matrix board, int x, int y) {
+    if (board.getElement(x, y) != 0) {
+        std::cout << "Posição já ocupada!" << std::endl;
+        return;
+    }
+
+    board.setElement(x, y, 2); // Assume que O fez a jogada
+
+    // Verifica se O pode ganhar
+    if (isWinningMove(board, 2)) {
+        std::cout << "O pode ganhar." << std::endl;
+    } else {
+        std::cout << "O não pode ganhar nesta rodada." << std::endl;
+    }
+
+    board.setElement(x, y, 0);// Reseta a posição
+
+    // Verifica se O precisa se defender
+    bool needsDefense = false;
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            if (board.getElement(i,j) == 0) {
+                board.setElement(x, y, 1); // Assume que X faz uma jogada
+                if (isWinningMove(board, 1)) {
+                    needsDefense = true;
+                    board.setElement(i, j, 0);// Reseta a posição
+                    break;
                 }
+                board.setElement(i, j, 0); // Reseta a posição
             }
         }
-        cout << "segunda jogada seria: [" << li << ", " << co << "]" << endl;
+        if (needsDefense) break;
     }
+
+    if (needsDefense) {
+        std::cout << "O precisa se defender." << std::endl;
+    } else {
+        std::cout << "O não precisa se defender." << std::endl;
+
+
+
+
+}
+
+// Verifica se X tem possibilidade de ganhar
+bool xCanWin = false;
+for (int i = 0; i < 3; ++i) {
+    for (int j = 0; j < 3; ++j) {
+        if (board.getElement(i,j) == 0) {
+            board.setElement(i, j, 1); // Assume que X faz uma jogada
+            if (isWinningMove(board, 1)) {
+                xCanWin = true;
+                board.setElement(i, j, 0); // Reseta a posição
+                break;
+            }
+            board.setElement(i, j, 0); // Reseta a posição
+        }
+    }
+    if (xCanWin) break;
+}
+
+if (xCanWin) {
+    std::cout << "X tem possibilidade de ganhar." << std::endl;
+} else {
+    std::cout << "X não tem possibilidade de ganhar." << std::endl;
+}
+
+}
+   
+    
+void desJog(Matrix c, Matrix input) {
+    int li = 0, co = 0; // Inicializa com valores inválidos
+    int liM = 0, coM = 0; // Inicializa com a posição do primeiro elemento
+    double maior = c.getElement(0, 0);
+    double secMax = numeric_limits<double>::min(); // Inicializa com o menor valor possível
+
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < 3; j++){
+            double current = c.getElement(i, j);
+            if(current > maior) {
+                secMax = maior;
+                li = liM; co = coM; // Atualiza a posição do segundo maior
+                maior = current;
+                liM = i; coM = j; //
+} else if (current > secMax && current < maior) {
+secMax = current;
+li = i; co = j; // Atualiza a posição do segundo maior
+}
+}
+}
+
+
+    cout << "Maior valor: [" << liM << ", " << coM << "]" << endl;
+    analyzeMove(input, liM, coM);
+    cout << "Segunda maior valor: [" << li << ", " << co << "]" << endl;
+    analyzeMove(input, li, co);
+
+
+}
 
 int main() {
     int input = 3;//matrix 3x3
     int oculta = 9;//teste a princípio
     int output =3; //matrix 3x3
-    double lernin = 0.10;
+    double lernin = 0.15;
     Matrix aux;
     Matrix outputTest;
     RedeNeural rn(input,oculta, output, lernin);
-    
-    double input_test[4] [9]={
+    int casosTeste = 10;
+    double input_test[10] [9]={
         {0, 0, 1, 0, 2, 1, 0, 0, 0},
         {0, 0, 1, 0, 2, 1, 0, 1, 2},
         {2, 1, 1, 0, 2, 1, 0, 0, 0},
-        {2, 0, 1, 2, 1, 1, 0, 0, 0}
+        {2, 0, 1, 2, 1, 1, 0, 0, 0},
+        {2, 1, 1, 2, 0, 1, 0, 0, 0},
+        {1, 1, 0, 1, 0, 2, 2 ,0, 0},
+        {1, 1, 0, 1, 2, 0, 2, 0, 0},
+        {1, 2, 1, 0, 1, 0, 2 , 0, 0},
+        {2, 2, 1, 1, 2, 0, 1, 1, 0},
+        {1, 2, 0, 1, 0, 0, 0, 0 , 0}
     };
     //  for(int i=0;i<4;i++){
     // aux = Matrix::vectorTomatriz(input_test[i], 3);
@@ -433,14 +535,13 @@ cout << "Treino com os seguintes " << casos << " casos:" << endl;
     }
     
     cout << "Depois do Teste:" << endl << "-----------------------------------------------" << endl;
-    for(int i=0;i<4;i++){
+    for(int i=0;i<casosTeste;i++){
     aux = Matrix::vectorTomatriz(input_test[i], 3);
     aux.printJogoDaVelha();
     outputTest = rn.feedforward(aux);
+    outputTest.display();
     cout << endl << endl;
-     outputTest.maxNumI();
-    segundaJogada(outputTest);
-    cout << endl;
+    
     }
      
     
