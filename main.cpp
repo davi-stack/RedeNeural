@@ -538,7 +538,7 @@ cout << "Treino com os seguintes " << casos << " casos:" << endl;
     for(int i=0;i<casosTeste;i++){
     aux = Matrix::vectorTomatriz(input_test[i], 3);
     aux.printJogoDaVelha();
-    outputTest = rn.feedforward(aux);
+    outputTest = rn.predict(aux);
     outputTest.display();
     cout << endl << endl;
     
