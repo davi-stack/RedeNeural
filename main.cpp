@@ -136,14 +136,24 @@ int main() {
     int input = 3;//matrix 3x3
     int oculta = 9;//teste a princípio
     int output =3; //matrix 3x3
-    double lernin = 0.15;
+    double lernin = 0.1;
     Matrix aux;
     Matrix outputTest;
     RedeNeural rn(input,oculta, output, lernin);
     int casosTeste = 10;
     double input_test[10] [9]={
         {0, 0, 1, 0, 2, 1, 0, 0, 0},
+        /*
+        - - x
+        - O X
+        - - -
+        */
         {0, 0, 1, 0, 2, 1, 0, 1, 2},
+        /*
+        - - x
+        - O X
+        - X O
+        */
         {2, 1, 1, 0, 2, 1, 0, 0, 0},
         {2, 0, 1, 2, 1, 1, 0, 0, 0},
         {2, 1, 1, 2, 0, 1, 0, 0, 0},
@@ -152,6 +162,69 @@ int main() {
         {1, 2, 1, 0, 1, 0, 2 , 0, 0},
         {2, 2, 1, 1, 2, 0, 1, 1, 0},
         {1, 2, 0, 1, 0, 0, 0, 0 , 0}
+    };
+    
+    double saida_esperada[10][9]={
+        {0.1, 0.1, 0, 0.1, 0, 0, 0.1, 0.1, 1},
+        /*
+        - - x
+        - O X
+        - - -
+        */
+        {1, 0.1, 0, 0.1, 0, 0, 0.1, 0, 0},
+        /*
+        - - x
+        - O X
+        - X O
+        */
+        {0, 0, 0, 0.1, 0, 0, 0.1, 0.1, 1},
+        /*
+        O X x
+        - O X
+        - - -
+        */
+        {0, 0.1, 0, 0, 0, 0, 1, 0.1, 0.1},
+        /*
+        O - x
+        O x X
+        - - -
+        */
+        {0, 0, 0, 0, 0.1, 0, 1, 0.1, 0.1},
+        /*
+        O x x
+        O - X
+        - - -
+        */
+        {0, 0, 1, 0, 0.1, 0, 0 ,0.1, 0.1},
+        /*
+        X x -
+        X - O
+        O - -
+        */
+        {0, 0, 1, 0, 0, 0.1, 0, 0.1, 0.1},
+        /*
+        X x -
+        X O -
+        O - -
+        */
+        {0, 0, 0, 0.1, 0, 0.1, 0, 0.1, 1},
+        /*
+        X O X
+        - X -
+        O - -
+        */
+        {0, 0, 0, 0, 0, 0, 0, 0.1, 1},
+        /*
+        O O X
+        X O -
+        X X -
+        */
+        {0, 0, 0.1, 0, 0.1, 0.1, 1, 0.1 , 0.1}
+        /*
+        X O -
+        X - -
+        - - -
+        */
     };
     //  for(int i=0;i<4;i++){
     // aux = Matrix::vectorTomatriz(input_test[i], 3);
@@ -470,13 +543,13 @@ int main() {
         */
         {0, 0, 0,
         0.1, 0, 0,
-        0.1, 0.1,1},
+        0.1, 1,1},
         /*
         X X O       0  0 1
         - X O ->   1  0 1
         - - -      1  1 10
         */
-        {0.1, 0.1, 0,
+        {0.1, 1, 0,
         0.1, 0, 0,
         0, 0,1},
         /*
@@ -487,7 +560,7 @@ int main() {
 
         {0, 0.1, 0,
         1, 0, 0,
-        0, 0,0.1},
+        0, 0, 1},
         /*
         O - X       0  0 1
         - O O ->   1  0 1
@@ -501,7 +574,7 @@ int main() {
         X O O ->   1  0 1
         X X -      1  1 10
         */
-        {0.1, 0.1, 1,
+        {1, 0.1, 1,
         0, 0, 0,
         0, 0,0},
         /*
@@ -517,7 +590,7 @@ int main() {
         X O - ->   1  0 1
         X X O      1  1 10
         */
-        {1, 0.1, 0.1,
+        {1, 0.1, 1,
         0, 0, 0.1,
         0, 0,0},
         /*
@@ -722,29 +795,27 @@ int main() {
     // Matrix input_test;
     // Matrix expected;
     cout << "Caso de teste com os valores: learningRate = " << lernin << ", oculta com " << oculta << " unidades." << endl;
-cout << "Treino com os seguintes " << casos << " casos:" << endl;
+    cout << "Treino com " << casos<< "numero de casos"<< endl;
     for(int i=0;i<casos;i++){
         Matrix expected = Matrix::vectorTomatriz(saida[i],3);
         Matrix input_test = Matrix::vectorTomatriz(entrada[i],3);
-        cout << "treino de numero" << i+1 << endl;
-        cout << "--------" << endl;
-        cout << "VALORES ANTES DO TREINO: "<< endl;
-        rn.bias_in_oc.display();
-        cout <<"----------------" << endl;
-        rn.bias_oc_out.display();
-        cout << endl;
-        //Matrix::p
-        printSideBySide(expected, input_test);
-        cout << "-------" << endl;
+
         rn.train(input_test, expected);
     }
     
+    
+    
     cout << "Depois do Teste:" << endl << "-----------------------------------------------" << endl;
+    Matrix aux2;
     for(int i=0;i<casosTeste;i++){
     aux = Matrix::vectorTomatriz(input_test[i], 3);
+    aux2 = Matrix::vectorTomatriz(saida_esperada[i], 3);
     aux.printJogoDaVelha();
     outputTest = rn.predict(aux);
-    outputTest.display();
+    cout << "erro em cada casa, 0.1 jogada possível, 10 jogada ideal e 0, não pode jogar" << endl;
+    aux2 = Matrix::subtract(aux, aux2);
+    aux2.display();
+
     cout << endl << endl;
     
     }
